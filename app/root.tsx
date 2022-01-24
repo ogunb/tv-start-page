@@ -7,8 +7,6 @@ import {
   ScrollRestoration,
 } from 'remix';
 
-import { MantineProvider } from '@mantine/core';
-
 export default function App() {
   return (
     <html lang="en">
@@ -19,26 +17,12 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <MantineTheme>
-          <Outlet />
-        </MantineTheme>
+        <Outlet />
 
         <ScrollRestoration />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
-  );
-}
-
-function MantineTheme({ children }: { children: React.ReactNode }) {
-  return (
-    <MantineProvider
-      theme={{ colorScheme: 'dark' }}
-      withNormalizeCSS
-      withGlobalStyles
-    >
-      {children}
-    </MantineProvider>
   );
 }
