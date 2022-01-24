@@ -1,20 +1,22 @@
-import { ActionFunction, useActionData } from 'remix';
+import { ActionFunction, Form, useActionData, useTransition } from 'remix';
+import Button from '~/components/Button';
 
-export const action: ActionFunction = async ({ request }) => {
-  const fields = Object.fromEntries(await request.formData());
-  return fields;
+export const action: ActionFunction = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return null;
 };
 
 export default function Index() {
   const actionData = useActionData();
-  console.log(actionData);
-
+  const transition = useTransition();
+  console.log({ transition, actionData });
   return (
-    <>
-      <form method="post" action="/?index">
-        <input name="input" />
-        <button type="submit">Submit</button>
-      </form>
-    </>
+    <Form action="/?index" method="post">
+      <fieldset disabled={transition.state !== 'idle'}>
+        <Button loading={transition.state === 'submitting'} type="submit">
+          button
+        </Button>
+      </fieldset>
+    </Form>
   );
 }
