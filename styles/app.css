@@ -41,7 +41,7 @@
     @apply text-base font-bold md:text-lg;
   }
 
-  body {
-    @apply text-sm md:text-base bg-slate-900 text-yellow-50;
+  html, body {
+    @apply text-sm md:text-base bg-slate-900 text-yellow-50 min-h-screen h-full container mx-auto;
   }
 }

@@ -8,7 +8,13 @@ import {
 } from 'remix';
 import styles from './styles/app.css';
 
-export function links() {
+export const meta = () => {
+  return {
+    title: 'my watch list'
+  }
+}
+
+export const links = () => {
   return [{ rel: 'stylesheet', href: styles }];
 }
 
@@ -21,7 +27,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="container mx-auto">
+      <body>
         <Outlet />
 
         <ScrollRestoration />

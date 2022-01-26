@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes } from 'react';
 import classnames from 'classnames';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  loading: boolean;
+  loading?: boolean;
 }
 
 const getRandomLoadingStatement = () => {
@@ -25,8 +25,8 @@ export default function Button({
   const disabled = loading || attrs.disabled;
 
   const classes = classnames(
-    'font-semibold rounded text-white bg-yellow-500 px-4 py-2 border-2 border-transparent',
-    { 'bg-yellow-600': disabled },
+    'font-semibold rounded text-white bg-sky-500 px-4 py-2 border-2 border-transparent',
+    { 'bg-sky-600': disabled },
     className
   );
 
