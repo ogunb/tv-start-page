@@ -34,7 +34,7 @@ export async function createRaindropSession(
   const session = await storage.getSession();
   session.set('accessToken', accessToken);
   session.set('refreshToken', refreshToken);
-  console.log(redirectTo)
+
   return redirect(redirectTo, {
     headers: {
       'Set-Cookie': await storage.commitSession(session),

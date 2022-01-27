@@ -1,4 +1,5 @@
-export const raindropApi = fetcher(process.env.RAINDROP_URL!);
+export const raindropOauthApi = fetcher(process.env.RAINDROP_URL!);
+export const raindropApi = fetcher(process.env.RAINDROP_API_URL!);
 
 function fetcher(baseURL: string) {
   const generateUrl = (path: string) => new URL(path, baseURL).toString();
@@ -7,12 +8,12 @@ function fetcher(baseURL: string) {
     async get(url: string, params: RequestInit) {
       const response = await fetch(generateUrl(url), {
         method: 'GET',
+        ...params,
         headers: {
           'Content-Type': 'application/json',
+          ...params.headers,
         },
-        ...params,
       });
-
       return response.json();
     },
 

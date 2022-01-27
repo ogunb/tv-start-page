@@ -25,7 +25,7 @@ export default function Button({
   const disabled = loading || attrs.disabled;
 
   const classes = classnames(
-    'font-semibold rounded text-white bg-sky-500 px-4 py-2 border-2 border-transparent',
+    'font-semibold rounded bg-sky-500 px-4 py-2 border-2 border-transparent',
     { 'bg-sky-600': disabled },
     className
   );
