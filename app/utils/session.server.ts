@@ -7,23 +7,17 @@ if (!sessionSecret) {
 
 const storage = createCookieSessionStorage({
   cookie: {
-    name: 'my_watch_session',
-
+    name: 'raindrop-session',
     secure: process.env.NODE_ENV === 'production',
     secrets: [sessionSecret],
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30,
     httpOnly: true,
   },
 });
 
-export async function login() {
-  console.log('TODO: LOGIN');
-}
-
 export async function logout(request: Request) {
-  const session = await getRaindropSession(request);
+  const session = await getSession(request);
 
   return redirect('/login', {
     headers: {
@@ -32,10 +26,15 @@ export async function logout(request: Request) {
   });
 }
 
-export async function createRaindropSession(token: string, redirectTo: string) {
+export async function createRaindropSession(
+  accessToken: string,
+  refreshToken: string,
+  redirectTo: string = '/'
+) {
   const session = await storage.getSession();
-  session.set('raindropToken', token);
-
+  session.set('accessToken', accessToken);
+  session.set('refreshToken', refreshToken);
+  console.log(redirectTo)
   return redirect(redirectTo, {
     headers: {
       'Set-Cookie': await storage.commitSession(session),
@@ -43,25 +42,32 @@ export async function createRaindropSession(token: string, redirectTo: string) {
   });
 }
 
-export function getRaindropSession(request: Request) {
+export function getSession(request: Request) {
   return storage.getSession(request.headers.get('Cookie'));
 }
 
-export async function getRaindropToken(request: Request) {
-  const session = await getRaindropSession(request);
-  const raindropToken = session.get('raindropToken');
-  if (!raindropToken || typeof raindropToken !== 'string') return null;
-  return raindropToken;
+export async function getAccessToken(request: Request) {
+  const session = await getSession(request);
+  const accessToken = session.get('accessToken');
+  if (!accessToken || typeof accessToken !== 'string') return null;
+  return accessToken;
 }
 
-export async function requireRaindropToken(
+export async function getRefreshToken(request: Request) {
+  const session = await getSession(request);
+  const refreshToken = session.get('refreshToken');
+  if (!refreshToken || typeof refreshToken !== 'string') return null;
+  return refreshToken;
+}
+
+export async function requireAccessToken(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
 ) {
-  const raindropToken = await getRaindropToken(request);
-  if (!raindropToken || typeof raindropToken !== 'string') {
+  const accessToken = await getAccessToken(request);
+  if (!accessToken || typeof accessToken !== 'string') {
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]]);
     throw redirect(`/login?${searchParams}`);
   }
-  return raindropToken;
+  return accessToken;
 }

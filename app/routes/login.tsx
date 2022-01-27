@@ -5,7 +5,7 @@ import Button from '~/components/Button';
 import RaindropLogoUrl from '~/assets/icons/raindrop-logo.svg';
 import { authorizeRaindrop, obtainAccessToken } from '~/utils/raindrop.server';
 import {
-  getRaindropToken,
+  getAccessToken,
 } from '~/utils/session.server';
 
 export const action: ActionFunction = () => {
@@ -13,14 +13,14 @@ export const action: ActionFunction = () => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  if (await getRaindropToken(request)) {
+  if (await getAccessToken(request)) {
     return redirect('/');
   }
 
   const params = new URL(request.url).searchParams;
   const raindropCode = params.get('code');
   if (raindropCode) {
-    obtainAccessToken(raindropCode)
+    return obtainAccessToken(raindropCode)
   }
 
   return null;

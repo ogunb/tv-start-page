@@ -1,13 +1,11 @@
 import { redirect } from 'remix';
+import { raindropApi } from './fetcher.server';
+import { createRaindropSession } from './session.server';
 
 const REDIRECT_URI = `${process.env.PUBLIC_URL}/login`;
 
-const generateRaindropUrl = (path: string) => {
-  return new URL(path, process.env.RAINDROP_URL);
-};
-
 export async function authorizeRaindrop() {
-  const url = generateRaindropUrl('oauth/authorize');
+  const url = new URL('oauth/authorize', process.env.RAINDROP_URL);
   url.searchParams.append('redirect_uri', REDIRECT_URI);
   url.searchParams.append('client_id', process.env.RAINDROP_CLIENT_ID!);
 
@@ -15,7 +13,6 @@ export async function authorizeRaindrop() {
 }
 
 export async function obtainAccessToken(code: string) {
-  const url = generateRaindropUrl('oauth/access_token');
   const body = JSON.stringify({
     grant_type: 'authorization_code',
     client_id: process.env.RAINDROP_CLIENT_ID,
@@ -25,17 +22,13 @@ export async function obtainAccessToken(code: string) {
   });
 
   try {
-    const response = await (
-      await fetch(url.toString(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    const { access_token: accessToken, refresh_token: refreshToken } =
+      await raindropApi.post('oauth/access_token', {
         body,
-      })
-    ).json();
-    console.log(response);
+      });
+
+    return createRaindropSession(accessToken, refreshToken);
   } catch (err) {
-    console.log(err);
+    throw new Error(`Unhandled error: ${err}`);
   }
 }
