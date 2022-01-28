@@ -58,7 +58,6 @@ export default function Index() {
   return (
     <Form
       method="post"
-      action="/?index"
       className="flex align-center justify-center flex-col max-w-xl m-auto h-full"
     >
       <Input name="collectionId" placeholder="Collection ID" className="mb-1" />
