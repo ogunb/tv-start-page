@@ -42,6 +42,6 @@
   }
 
   html, body {
-    @apply text-sm md:text-base bg-slate-900 text-sky-100 min-h-screen h-full container mx-auto;
+    @apply text-sm md:text-base bg-slate-900 text-sky-100 min-h-screen h-full mx-auto;
   }
 }

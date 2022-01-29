@@ -5,7 +5,7 @@ function fetcher(baseURL: string) {
   const generateUrl = (path: string) => new URL(path, baseURL).toString();
 
   return {
-    async get(url: string, params: RequestInit) {
+    async get<T>(url: string, params: RequestInit): Promise<T> {
       const response = await fetch(generateUrl(url), {
         method: 'GET',
         ...params,
@@ -17,7 +17,7 @@ function fetcher(baseURL: string) {
       return response.json();
     },
 
-    async post(url: string, params: RequestInit) {
+    async post<T>(url: string, params: RequestInit): Promise<T> {
       const response = await fetch(generateUrl(url), {
         method: 'POST',
         headers: {
@@ -29,7 +29,7 @@ function fetcher(baseURL: string) {
       return response.json();
     },
 
-    async put(url: string, params: RequestInit) {
+    async put<T>(url: string, params: RequestInit): Promise<T> {
       const response = await fetch(generateUrl(url), {
         method: 'PUT',
         headers: {
@@ -41,7 +41,7 @@ function fetcher(baseURL: string) {
       return response.json();
     },
 
-    async delete(url: string, params: RequestInit) {
+    async delete<T>(url: string, params: RequestInit): Promise<T> {
       const response = await fetch(generateUrl(url), {
         method: 'DELETE',
         headers: {

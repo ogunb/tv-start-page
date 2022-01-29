@@ -1,4 +1,5 @@
 import { createCookie, redirect } from 'remix';
+import { Collection } from '~/types/collection';
 import { raindropApi, raindropOauthApi } from './fetcher.server';
 import { createRaindropSession } from './session.server';
 
@@ -35,18 +36,25 @@ export async function obtainAccessToken(code: string) {
   }
 }
 
-export async function fetchCollection(collectionId: string | number, accessToken: string) {
+type FetchCollectionResponse = {
+  count: number;
+  items: Collection[];
+};
+export async function fetchCollection(
+  collectionId: string | number,
+  accessToken: string
+): Promise<FetchCollectionResponse> {
   try {
-    const movies = await raindropApi.get(
+    const response = await raindropApi.get<FetchCollectionResponse>(
       `/rest/v1/raindrops/${collectionId}?sort=title`,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       }
     );
 
-    return movies;
+    return response;
   } catch (err) {
     throw new Error(`Unhandled error: ${err}`);
   }

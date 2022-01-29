@@ -8,10 +8,6 @@ import {
   getAccessToken,
 } from '~/utils/session.server';
 
-export const action: ActionFunction = () => {
-  return authorizeRaindrop();
-};
-
 export const loader: LoaderFunction = async ({ request }) => {
   if (await getAccessToken(request)) {
     return redirect('/');
@@ -24,6 +20,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   return null;
+};
+
+export const action: ActionFunction = () => {
+  return authorizeRaindrop();
 };
 
 export default function Login() {
