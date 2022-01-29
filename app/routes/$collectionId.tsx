@@ -86,7 +86,8 @@ export default function Collection() {
         <Form method="delete">
           <Button className="w-full mb-5">Change Collection</Button>
         </Form>
-        <Input placeholder="Filter by name..." />
+
+        {/* TODO <Input placeholder="Filter by name..." /> */}
         <p>Found total of {showCount} items in your collection.</p>
       </div>
 
