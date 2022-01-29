@@ -5,6 +5,7 @@ import {
   ActionFunction,
   json,
   redirect,
+  useLoaderData,
 } from 'remix';
 
 import Input from '~/components/Input';
@@ -12,17 +13,26 @@ import Button from '~/components/Button';
 
 import { requireAccessToken } from '~/utils/session.server';
 import { collectionIdCookie } from '~/utils/raindrop.server';
+import { useRef } from 'react';
 
-export const loader: LoaderFunction = async ({ request }) => {
+type LoaderData = {
+  latestCollectionId: string | null;
+};
+export const loader: LoaderFunction = async ({
+  request,
+}): Promise<LoaderData | Response> => {
   await requireAccessToken(request);
-  const cookie = await collectionIdCookie.parse(
-    request.headers.get('Cookie')
-  );
+  const cookie = await collectionIdCookie.parse(request.headers.get('Cookie'));
   if (cookie?.collectionId) {
     return redirect(`/${cookie.collectionId}`);
   }
 
-  return null;
+  const params = new URL(request.url).searchParams;
+  const latestCollectionId = params.get('latest');
+
+  return {
+    latestCollectionId,
+  };
 };
 
 type ActionData = {
@@ -32,7 +42,9 @@ type ActionData = {
   };
 };
 const badRequest = (data: ActionData) => json(data, { status: 400 });
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({
+  request,
+}): Promise<ActionData | Response> => {
   const { collectionId } = Object.fromEntries(await request.formData());
 
   if (!collectionId) {
@@ -51,7 +63,10 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Index() {
+  const { latestCollectionId } = useLoaderData<LoaderData>();
   const transition = useTransition();
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const isFetchingMovies = transition.state === 'submitting';
 
@@ -60,7 +75,16 @@ export default function Index() {
       method="post"
       className="flex align-center justify-center flex-col max-w-xl m-auto h-full"
     >
-      <Input name="collectionId" placeholder="Collection ID" className="mb-1" />
+      <Input
+        ref={inputRef}
+        defaultValue={latestCollectionId ?? ''}
+        name="collectionId"
+        placeholder="Collection ID"
+        className="mb-1"
+        onFocus={() => {
+          inputRef.current?.select();
+        }}
+      />
       <p className="mb-2">
         I'm lazy so find your collection id and put it in (It's in the url)
       </p>

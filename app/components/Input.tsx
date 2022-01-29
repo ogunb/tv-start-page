@@ -1,16 +1,14 @@
-import type { InputHTMLAttributes } from 'react';
+import { ForwardedRef, forwardRef, InputHTMLAttributes } from 'react';
 import classnames from 'classnames';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
 }
 
-export default function Input({
-  label,
-  disabled,
-  className,
-  ...attrs
-}: InputProps) {
+function Input(
+  { label, disabled, className, ...attrs }: InputProps,
+  ref: ForwardedRef<HTMLInputElement | null>
+) {
   const classes = classnames(
     'w-full px-4 py-2 bg-sky-100 border border-transparent focus:border-sky-500 text-sky-900 rounded-sm focus:outline-none focus:border',
     { 'bg-sky-600': disabled },
@@ -20,7 +18,16 @@ export default function Input({
   return (
     <label>
       {label ? label : null}
-      <input id="name" type="text" name="name" className={classes} {...attrs} />
+      <input
+        ref={ref}
+        id="name"
+        type="text"
+        name="name"
+        className={classes}
+        {...attrs}
+      />
     </label>
   );
 }
+
+export default forwardRef(Input);
