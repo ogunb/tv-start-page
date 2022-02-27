@@ -13,10 +13,7 @@
     "postinstall": "remix setup node",
     "prettier": "prettier --write ./app/**",
     "eslint": "eslint --fix ./app/**",
-    "lint": "yarn prettier && yarn eslint",
-    "docker:build": "docker build -t tvstartpage .",
-    "docker:run": "docker run -t -d --name tvstartpage -p 80:3000 --env-file .env tvstartpage",
-    "docker:rm": "docker rm tvstartpage"
+    "lint": "yarn prettier && yarn eslint"
   },
   "dependencies": {
     "@remix-run/react": "^1.1.3",
