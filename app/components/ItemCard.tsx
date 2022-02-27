@@ -1,8 +1,8 @@
-import { Show } from '~/types/show';
+import { Item } from '~/types/item';
 
-type ShowCardProps = Show
+type ItemCardProps = Item
 
-export function ShowCard({ name, description, cover }: ShowCardProps) {
+export function ItemCard({ name, description, cover }: ItemCardProps) {
   return (
     <div
       className="w-[350px] h-[550px] bg-top bg-no-repeat bg-cover relative rounded shadow-md hover:scale-105 transition-transform cursor-pointer hover:z-10 transform-gpu"

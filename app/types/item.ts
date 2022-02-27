@@ -1,4 +1,4 @@
-export type Show = {
+export type Item = {
   name: string;
   description: string;
   cover: string;

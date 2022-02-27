@@ -7,14 +7,14 @@ import {
   useCatch,
   useLoaderData,
 } from 'remix';
-import { Show } from '~/types/show';
+import { Item } from '~/types/item';
 import { fetchCollection } from '~/utils/raindrop.server';
-import { ShowCard } from '~/components/ShowCard';
+import { ItemCard } from '~/components/ItemCard';
 import Button from '~/components/Button';
 
 type LoaderData = {
-  shows: Show[];
-  showCount: number;
+  items: Item[];
+  itemCount: number;
 };
 export const loader: LoaderFunction = async ({
   params,
@@ -23,24 +23,24 @@ export const loader: LoaderFunction = async ({
     return redirect('/');
   }
 
-  const { items, count } = await fetchCollection(params.collectionId);
+  const { items: list, count } = await fetchCollection(params.collectionId);
 
-  if (!items.length) {
+  if (!list.length) {
     throw new Response(`Mate you sure you got sometin' in that collection?`, {
       status: 404,
     });
   }
 
-  const shows = items.map((show) => ({
-    description: show.excerpt,
-    cover: show.cover,
-    name: show.title,
-    link: show.link,
+  const items = list.map((item) => ({
+    description: item.excerpt,
+    cover: item.cover,
+    name: item.title,
+    link: item.link,
   }));
 
   return {
-    shows,
-    showCount: count,
+    items,
+    itemCount: count,
   };
 };
 
@@ -57,7 +57,7 @@ export const action: ActionFunction = ({ request }) => {
 };
 
 export default function Collection() {
-  const { shows, showCount } = useLoaderData<LoaderData>();
+  const { items, itemCount } = useLoaderData<LoaderData>();
 
   return (
     <div className="py-5 xl:px-20">
@@ -67,12 +67,12 @@ export default function Collection() {
         </Form>
 
         {/* TODO <Input placeholder="Filter by name..." /> */}
-        <p>Found total of {showCount} items in your collection.</p>
+        <p>Found total of {itemCount} items in your collection.</p>
       </div>
 
       <div className="flex flex-wrap gap-5 justify-center">
-        {shows.map((show) => (
-          <ShowCard key={show.link} {...show} />
+        {items.map((item) => (
+          <ItemCard key={item.link} {...item} />
         ))}
       </div>
     </div>
