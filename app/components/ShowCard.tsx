@@ -1,6 +1,6 @@
 import { Show } from '~/types/show';
 
-interface ShowCardProps extends Show {}
+type ShowCardProps = Show
 
 export function ShowCard({ name, description, cover }: ShowCardProps) {
   return (
@@ -14,7 +14,9 @@ export function ShowCard({ name, description, cover }: ShowCardProps) {
 
       <div className="relative z-1 p-5 h-full flex flex-col justify-end">
         <h1>{name.replace('- IMDb', '')}</h1>
-        <p className="truncate line-clamp-3 whitespace-pre-wrap">{description}</p>
+        <p className="truncate line-clamp-3 whitespace-pre-wrap">
+          {description}
+        </p>
       </div>
     </div>
   );

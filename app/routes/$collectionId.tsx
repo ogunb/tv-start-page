@@ -9,30 +9,21 @@ import {
 } from 'remix';
 import { Show } from '~/types/show';
 import { fetchCollection } from '~/utils/raindrop.server';
-import { requireAccessToken } from '~/utils/session.server';
-import Input from '~/components/Input';
 import { ShowCard } from '~/components/ShowCard';
 import Button from '~/components/Button';
-import { collectionIdCookie } from '../utils/raindrop.server';
 
 type LoaderData = {
   shows: Show[];
   showCount: number;
 };
 export const loader: LoaderFunction = async ({
-  request,
   params,
 }): Promise<LoaderData | Response> => {
-  const accessToken = await requireAccessToken(request);
-
   if (!params.collectionId) {
     return redirect('/');
   }
 
-  const { items, count } = await fetchCollection(
-    params.collectionId,
-    accessToken
-  );
+  const { items, count } = await fetchCollection(params.collectionId);
 
   if (!items.length) {
     throw new Response(`Mate you sure you got sometin' in that collection?`, {
@@ -53,28 +44,16 @@ export const loader: LoaderFunction = async ({
   };
 };
 
-const redirectToCollectionSelection = async (collectionId?: string) => {
-  return redirect(`/?latest=${collectionId}`, {
-    headers: {
-      'Set-Cookie': await collectionIdCookie.serialize({
-        collectionId: null,
-      }),
-    },
-  });
-};
-
-export const action: ActionFunction = ({ request, params }) => {
+export const action: ActionFunction = ({ request }) => {
   switch (request.method) {
     case 'DELETE': {
-      return redirectToCollectionSelection(params.collectionId);
+      return redirect('/');
       break;
     }
     default: {
       throw new Response('Method not Allowed', { status: 405 });
     }
   }
-
-  return null;
 };
 
 export default function Collection() {

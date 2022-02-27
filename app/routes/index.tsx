@@ -1,39 +1,15 @@
 import {
-  LoaderFunction,
   Form,
   useTransition,
   ActionFunction,
   json,
   redirect,
-  useLoaderData,
 } from 'remix';
 
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 
-import { requireAccessToken } from '~/utils/session.server';
-import { collectionIdCookie } from '~/utils/raindrop.server';
 import { useRef } from 'react';
-
-type LoaderData = {
-  latestCollectionId: string | null;
-};
-export const loader: LoaderFunction = async ({
-  request,
-}): Promise<LoaderData | Response> => {
-  await requireAccessToken(request);
-  const cookie = await collectionIdCookie.parse(request.headers.get('Cookie'));
-  if (cookie?.collectionId) {
-    return redirect(`/${cookie.collectionId}`);
-  }
-
-  const params = new URL(request.url).searchParams;
-  const latestCollectionId = params.get('latest');
-
-  return {
-    latestCollectionId,
-  };
-};
 
 type ActionData = {
   formError?: string;
@@ -53,17 +29,10 @@ export const action: ActionFunction = async ({
     });
   }
 
-  return redirect(`/${collectionId}`, {
-    headers: {
-      'Set-Cookie': await collectionIdCookie.serialize({
-        collectionId,
-      }),
-    },
-  });
+  return redirect(`/${collectionId}`);
 };
 
 export default function Index() {
-  const { latestCollectionId } = useLoaderData<LoaderData>();
   const transition = useTransition();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -77,7 +46,6 @@ export default function Index() {
     >
       <Input
         ref={inputRef}
-        defaultValue={latestCollectionId ?? ''}
         name="collectionId"
         placeholder="Collection ID"
         className="mb-1"

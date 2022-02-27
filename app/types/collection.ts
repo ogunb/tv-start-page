@@ -3,4 +3,4 @@ export type Collection = {
   cover: string;
   title: string;
   link: string;
-}
+};
