@@ -66,12 +66,14 @@ export default function Index() {
 
   return (
     <div className="mx-auto max-w-5xl p-4">
-      <a
-        className="block p-10 -ml-px text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300 text-center text-2xl mb-6"
-        href={dynamicLink.link}
-      >
-        {dynamicLink.title}
-      </a>
+      {dynamicLink ? (
+        <a
+          className="block p-10 -ml-px text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300 text-center text-2xl mb-6"
+          href={dynamicLink.link}
+        >
+          {dynamicLink.title}
+        </a>
+      ) : null}
 
       <CollectionList list={collectionList}></CollectionList>
     </div>
