@@ -2,9 +2,10 @@ import { Item } from '~/types/item';
 
 type ItemCardProps = Item
 
-export default function ItemCard({ title, excerpt, cover }: ItemCardProps) {
+export default function ItemCard({ title, excerpt, cover, link }: ItemCardProps) {
   return (
-    <div
+    <a
+      href={link}
       className="w-[350px] h-[550px] bg-top bg-no-repeat bg-cover relative rounded shadow-md hover:scale-105 transition-transform cursor-pointer hover:z-10 transform-gpu"
       style={{
         backgroundImage: `url(${cover})`,
@@ -18,6 +19,6 @@ export default function ItemCard({ title, excerpt, cover }: ItemCardProps) {
           {excerpt}
         </p>
       </div>
-    </div>
+    </a>
   );
 }
