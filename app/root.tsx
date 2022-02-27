@@ -21,7 +21,7 @@ export const links = () => {
 
 function Document({
   children,
-  title = 'my-watch-list',
+  title = 'Start Page',
 }: {
   children: React.ReactNode;
   title?: string;
