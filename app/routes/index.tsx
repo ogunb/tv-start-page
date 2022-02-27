@@ -6,15 +6,20 @@ import {
   useLoaderData,
 } from 'remix';
 
-import { fetchRaindropsList } from '~/utils/raindrop.server';
+import { fetchDynamicLink, fetchRaindropsList } from '~/utils/raindrop.server';
 import { Collection } from '~/types/collection';
 import CollectionList from '~/components/Collection/CollectionList';
+import { Item } from '~/types/item';
 
 type LoaderData = {
   collectionList: Collection[];
+  dynamicLink: Item;
 };
 export const loader: LoaderFunction = async (): Promise<LoaderData> => {
-  const { items: list } = await fetchRaindropsList();
+  const [{ items: list }, dynamicLink] = await Promise.all([
+    fetchRaindropsList(),
+    fetchDynamicLink(),
+  ]);
 
   if (!list.length) {
     throw new Response(`You don't have any collections.`, {
@@ -31,6 +36,7 @@ export const loader: LoaderFunction = async (): Promise<LoaderData> => {
 
   return {
     collectionList,
+    dynamicLink,
   };
 };
 
@@ -56,10 +62,17 @@ export const action: ActionFunction = async ({
 };
 
 export default function Index() {
-  const { collectionList } = useLoaderData<LoaderData>();
+  const { collectionList, dynamicLink } = useLoaderData<LoaderData>();
 
   return (
     <div className="mx-auto max-w-5xl p-4">
+      <a
+        className="block p-10 -ml-px text-slate-700 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300 text-center text-2xl mb-6"
+        href={dynamicLink.link}
+      >
+        {dynamicLink.title}
+      </a>
+
       <CollectionList list={collectionList}></CollectionList>
     </div>
   );
