@@ -1,15 +1,38 @@
 import {
-  Form,
-  useTransition,
   ActionFunction,
+  LoaderFunction,
   json,
   redirect,
+  useLoaderData,
 } from 'remix';
 
-import Input from '~/components/Input';
-import Button from '~/components/Button';
+import { fetchRaindropsList } from '~/utils/raindrop.server';
+import { Collection } from '~/types/collection';
+import CollectionList from '~/components/Collection/CollectionList';
 
-import { useRef } from 'react';
+type LoaderData = {
+  collectionList: Collection[];
+};
+export const loader: LoaderFunction = async (): Promise<LoaderData> => {
+  const { items: list } = await fetchRaindropsList();
+
+  if (!list.length) {
+    throw new Response(`You don't have any collections.`, {
+      status: 404,
+    });
+  }
+
+  const collectionList = list.map((collection) => ({
+    id: collection._id,
+    title: collection.title,
+    description: collection.description,
+    count: collection.count,
+  }));
+
+  return {
+    collectionList,
+  };
+};
 
 type ActionData = {
   formError?: string;
@@ -33,33 +56,11 @@ export const action: ActionFunction = async ({
 };
 
 export default function Index() {
-  const transition = useTransition();
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const isFetchingMovies = transition.state === 'submitting';
+  const { collectionList } = useLoaderData<LoaderData>();
 
   return (
-    <Form
-      method="post"
-      className="flex align-center justify-center flex-col max-w-xl m-auto h-full"
-    >
-      <Input
-        ref={inputRef}
-        name="collectionId"
-        placeholder="Collection ID"
-        className="mb-1"
-        onFocus={() => {
-          inputRef.current?.select();
-        }}
-      />
-      <p className="mb-2">
-        I'm lazy so find your collection id and put it in (It's in the url)
-      </p>
-
-      <Button loading={isFetchingMovies} type="submit">
-        Let's get your movies
-      </Button>
-    </Form>
+    <div className="mx-auto max-w-5xl p-4">
+      <CollectionList list={collectionList}></CollectionList>
+    </div>
   );
 }

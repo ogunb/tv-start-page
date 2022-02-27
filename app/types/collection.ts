@@ -1,6 +1,6 @@
 export type Collection = {
-  excerpt: string;
-  cover: string;
+  id: string;
   title: string;
-  link: string;
+  description: string;
+  count: number;
 };

@@ -1,6 +1,6 @@
 export type Item = {
-  name: string;
-  description: string;
+  title: string;
+  excerpt: string;
   cover: string;
   link: string;
 };

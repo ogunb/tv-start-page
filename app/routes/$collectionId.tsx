@@ -8,8 +8,8 @@ import {
   useLoaderData,
 } from 'remix';
 import { Item } from '~/types/item';
-import { fetchCollection } from '~/utils/raindrop.server';
-import { ItemCard } from '~/components/ItemCard';
+import { fetchRaindrops } from '~/utils/raindrop.server';
+import ItemCard from '~/components/ItemCard';
 import Button from '~/components/Button';
 
 type LoaderData = {
@@ -23,7 +23,7 @@ export const loader: LoaderFunction = async ({
     return redirect('/');
   }
 
-  const { items: list, count } = await fetchCollection(params.collectionId);
+  const { items: list, count } = await fetchRaindrops(params.collectionId);
 
   if (!list.length) {
     throw new Response(`Mate you sure you got sometin' in that collection?`, {
@@ -32,9 +32,9 @@ export const loader: LoaderFunction = async ({
   }
 
   const items = list.map((item) => ({
-    description: item.excerpt,
+    excerpt: item.excerpt,
     cover: item.cover,
-    name: item.title,
+    title: item.title,
     link: item.link,
   }));
 
@@ -66,7 +66,7 @@ export default function Collection() {
           <Button className="w-full mb-5">Change Collection</Button>
         </Form>
 
-        {/* TODO <Input placeholder="Filter by name..." /> */}
+        {/* TODO <Input placeholder="Filter by title..." /> */}
         <p>Found total of {itemCount} items in your collection.</p>
       </div>
 
