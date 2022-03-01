@@ -10,7 +10,7 @@ export default function CollectionCard({
   count,
 }: CollectionCardProps) {
   return (
-    <Link to={`/${id}`}>
+    <Link to={`/collection/${id}`}>
       <div className="sm:flex items-center justify-between w-72 text-left space-x-3 px-4 h-12 shadow-sm rounded-lg text-slate-400 dark:bg-slate-800 dark:text-slate-300 dark:highlight-white/5 dark:hover:bg-slate-700">
         <div className="flex">
           <h5>{title}</h5>

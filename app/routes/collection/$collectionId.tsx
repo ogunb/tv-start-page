@@ -1,6 +1,5 @@
 import {
   ActionFunction,
-  Form,
   Link,
   LoaderFunction,
   redirect,
@@ -46,10 +45,6 @@ export const loader: LoaderFunction = async ({
 
 export const action: ActionFunction = ({ request }) => {
   switch (request.method) {
-    case 'DELETE': {
-      return redirect('/');
-      break;
-    }
     default: {
       throw new Response('Method not Allowed', { status: 405 });
     }
@@ -60,14 +55,9 @@ export default function Collection() {
   const { items, itemCount } = useLoaderData<LoaderData>();
 
   return (
-    <div className="py-5 xl:px-20">
-      <div className="flex flex-col mx-auto max-w-xl mb-5">
-        <Form method="delete">
-          <Button className="w-full mb-5">Change Collection</Button>
-        </Form>
-
-        {/* TODO <Input placeholder="Filter by title..." /> */}
-        <p>Found total of {itemCount} items in your collection.</p>
+    <div className="py-5">
+      <div className="flex flex-col mx-auto mb-5">
+        <p className="text-center">Found total of {itemCount} items in your collection.</p>
       </div>
 
       <div className="flex flex-wrap gap-5 justify-center">
