@@ -1,4 +1,4 @@
-FROM node:17.4.0-alpine3.15 as BUILD_IMAGE
+FROM node:18.4.0-alpine3.15 as BUILD_IMAGE
 
 RUN mkdir /app
 WORKDIR /app
