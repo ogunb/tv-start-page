@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Customize these variable */
-  /* https://github.com/adamwathan/tailwind-css-variable-text-opacity-demo */
-  --tw-clr-primary-400: 0, 224, 243;
-  --tw-clr-primary-500: 0, 196, 253;
-
-  --clr-primary-400: rgb(var(--tw-clr-primary-400)); /* #00e0f3 */
-  --clr-primary-500: rgb(var(--tw-clr-primary-500)); /* #00c4fd */
-}
-
 @layer base {
   /* inter var - latin */
   @font-face {
@@ -42,6 +32,6 @@
   }
 
   html, body {
-    @apply text-sm md:text-base bg-slate-900 text-sky-100 min-h-screen h-full mx-auto;
+    @apply text-sm md:text-base bg-black-950 text-sky-100 min-h-screen h-full mx-auto;
   }
 }

@@ -8,7 +8,7 @@ COPY ./ .
 RUN yarn build
 RUN npm prune --production
 
-FROM node:17.4.0-alpine3.15
+FROM node:18.4.0-alpine3.15
 
 WORKDIR /app
 COPY --from=BUILD_IMAGE /app/package*.json ./

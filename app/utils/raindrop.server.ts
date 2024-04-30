@@ -4,14 +4,24 @@ import { raindropApi } from './fetcher.server';
 
 const DYNAMIC_LINK_COLLECTION_ID = 23419709;
 
-type FetchCollectionListResponse = {
-  items: ({ _id: string } & Collection)[];
+type RaindropApiInformation = {
+  result: false;
+  errorMessage: string;
+  status: number;
 };
+
+type FetchCollectionListResponse = {
+  items?: ({ _id: string } & Collection)[];
+} & RaindropApiInformation;
 export async function fetchRaindropsList() {
   try {
     const response = await raindropApi.get<FetchCollectionListResponse>(
       `/rest/v1/collections`
     );
+
+    if (!response.result) {
+      throw new Error(response.errorMessage);
+    }
 
     return response;
   } catch (err) {
@@ -20,9 +30,9 @@ export async function fetchRaindropsList() {
 }
 
 type FetchCollectionResponse = {
-  count: number;
-  items: Item[];
-};
+  count?: number;
+  items?: Item[];
+} & RaindropApiInformation;
 export async function fetchRaindrops(
   collectionId: string | number,
   params = {}
@@ -33,19 +43,23 @@ export async function fetchRaindrops(
       `/rest/v1/raindrops/${collectionId}?${queries.toString()}`
     );
 
+    if (!response.result) {
+      throw new Error(response.errorMessage);
+    }
+
     return response;
   } catch (err) {
     throw new Error(`Unhandled error: ${err}`);
   }
 }
 
-type FetchDynamicLinkResponse = Item;
+type FetchDynamicLinkResponse = Item | undefined
 export async function fetchDynamicLink(): Promise<FetchDynamicLinkResponse> {
   try {
     const response = await fetchRaindrops(DYNAMIC_LINK_COLLECTION_ID, {
       sort: '-created',
     });
-    return response.items[0];
+    return response.items?.[0];
   } catch (err) {
     throw new Error(`Unhandled error: ${err}`);
   }
